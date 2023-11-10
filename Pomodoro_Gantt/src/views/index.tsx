@@ -1,19 +1,31 @@
-import { AppStatus } from '../common/enum'
-import { useAppSelector } from '../configs/hooks'
-import ErrorPage from './ErrorPage'
+import { useEffect } from 'react';
+import { AppStatus } from '../common/enum';
+import { useAppDispatch, useAppSelector } from '../configs/hooks';
+import ErrorPage from './ErrorPage';
+import { fetchInitPreferences } from '../redux/general/thunks';
+import LoadingPage from './LoadingPage';
+import Main from './Main';
 
 function Views() {
-  const { status } = useAppSelector((state) => state.general)
+  const dispatch =useAppDispatch();
+  const { status } = useAppSelector((state) => state.general);
+
+
+  useEffect(() => {
+    (async()=>{
+      await dispatch(fetchInitPreferences())
+    })();
+  }, []);
 
   switch (status) {
     case AppStatus.error:
-      return <ErrorPage />
+      return <ErrorPage />;
     case AppStatus.loading:
-      return <div> Loading</div>
-    case AppStatus.idle:
-      return <div>Idle</div>
+      return <LoadingPage />
+    case AppStatus.success:
+      return <Main />
     default:
-      return <div>Success</div>
+      return <ErrorPage />
   }
 }
-export default Views
+export default Views;
