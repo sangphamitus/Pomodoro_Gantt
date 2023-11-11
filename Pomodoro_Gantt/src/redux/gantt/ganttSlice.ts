@@ -1,29 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Item } from '../../interfaces';
 
-export interface GanttSettings {
-  time: {
-    pomodoroTime: number;
-    shortBreak: number;
-    longBreak: number;
-  };
-}
+
 interface GanttState {
-  settings: GanttSettings;
+  items:Record<number,Item>
+  weekday:number
 }
 
 const initialState: GanttState = {
-  settings:{time: {
-    pomodoroTime: 25,
-    shortBreak: 5,
-    longBreak: 15,
-  }}
+  items:{},
+  weekday:0
 };
 
 export const ganttSlice = createSlice({
-  name: 'general',
+  name: 'gantt',
   initialState,
   reducers: {
-   
   },
   extraReducers: (_builder) => {}
 });

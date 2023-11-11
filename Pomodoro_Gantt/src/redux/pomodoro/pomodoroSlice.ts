@@ -40,7 +40,7 @@ const initialState: PomodoroState = {
 };
 
 export const porodomoSlice = createSlice({
-  name: 'general',
+  name: 'pomodoro',
   initialState,
   reducers: {
     setMode: (state, action: PayloadAction<PomodoroMode>) => {

@@ -11,7 +11,7 @@ const TaskRows = memo(({ id }: { id: number }) => {
   if (!task) return <></>;
 
   const [isExpanded, setIsExpanded] = useState(false);
-  const onCheckHandler = (_e: any) => {
+  const onCheckHandler = (_e: React.ChangeEvent) => {
     dispatch(
       setTaskAttribute({
         id,

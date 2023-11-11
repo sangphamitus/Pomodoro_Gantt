@@ -10,7 +10,7 @@ interface GeneralState {
 
 const initialState: GeneralState = {
   status: AppStatus.loading,
-  tabs: AppTab.porodomo,
+  tabs: AppTab.gantt,
   theme: AppTheme.dark,
 };
 
