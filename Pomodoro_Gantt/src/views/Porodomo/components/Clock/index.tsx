@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../configs/hooks';
 import { setCurrentInterval, setIsRunning, setMode } from '../../../../redux/pomodoro/pomodoroSlice';
 import { PomodoroMode } from '../../../../common/enum';
+import { increaseActPomo } from '../../../../redux/pomodoro/thunks';
 
 const Clock = ({ className }: { className: string }) => {
   const dispatch = useAppDispatch();
@@ -20,45 +21,47 @@ const Clock = ({ className }: { className: string }) => {
   };
   useEffect(() => {
     setSecond(timer[mode] * 60);
-    if (isRunning) dispatch(setIsRunning(false));
     if (autoStartPomodoro && mode === PomodoroMode.pomodoro && currentInterval != 0) {
       dispatch(setIsRunning(true));
+      return;
     }
     if (autoStartBreak && (mode === PomodoroMode.shortBreak || mode === PomodoroMode.longBreak)) {
       dispatch(setIsRunning(true));
+      return;
     }
+    if (isRunning) dispatch(setIsRunning(false));
   }, [mode, timer]);
 
-  useEffect(() => {
+  const updateSecond = () => {
     if (!isRunning) return;
-
     interval.current = setInterval(() => {
-      if (second > 0) {
-        setSecond((second) => {
-          document.title = `${formatTime(second - 30)} PomoAntt`;
-          return second - 30;
-        });
-      } else {
-        dispatch(setIsRunning(false));
-
-        if (autoStartBreak && mode === PomodoroMode.pomodoro) {
-          if (currentInterval === longBreakInterval) {
-            dispatch(setCurrentInterval(0));
-            dispatch(setMode(PomodoroMode.longBreak));
-          } else {
-            dispatch(setMode(PomodoroMode.shortBreak));
-            dispatch(setCurrentInterval(currentInterval + 1));
-          }
-        }
-        if (autoStartPomodoro && (mode === PomodoroMode.shortBreak || mode === PomodoroMode.longBreak)) {
-          dispatch(setMode(PomodoroMode.pomodoro));
-        }
-        clearInterval(interval.current);
-      }
+      setSecond((second) => {
+        document.title = `${formatTime(second - 1)} PomoAntt`;
+        return second - 1;
+      });
     }, 1000);
+    if (second == 0) {
+      if (mode === PomodoroMode.pomodoro) {
+        dispatch(increaseActPomo());
 
+        if (currentInterval === longBreakInterval) {
+          dispatch(setCurrentInterval(0));
+          dispatch(setMode(PomodoroMode.longBreak));
+        } else {
+          dispatch(setMode(PomodoroMode.shortBreak));
+          dispatch(setCurrentInterval(currentInterval + 1));
+        }
+      } else if (mode === PomodoroMode.shortBreak || mode === PomodoroMode.longBreak) {
+        dispatch(setMode(PomodoroMode.pomodoro));
+      }
+      clearInterval(interval.current);
+    }
+  };
+
+  useEffect(() => {
+    updateSecond();
     return () => clearInterval(interval.current);
-  }, [isRunning, mode]);
+  }, [isRunning, second]);
 
   return (
     <div className={`card w-96 ${className}`}>

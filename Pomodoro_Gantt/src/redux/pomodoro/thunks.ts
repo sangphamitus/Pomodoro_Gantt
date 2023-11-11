@@ -17,10 +17,13 @@ const clearAllFinished = createAsyncThunk('pomodoro/clearAllFinished', async (_,
 const clearAllActPomo = createAsyncThunk('pomodoro/clearAllActPomo', async (_, { getState, dispatch }) => {
   try {
     const { tasks } = (getState() as RootState).pomodoro;
-    const finishedTasks = Object.keys(tasks).reduce((acc: Record<number, Task>, _key: string) => {
+    const finishedTasks = Object.keys(tasks).filter((_key:string)=>{  const key = parseInt(_key);
+      const _task =tasks[key];
+      return _task.status !== TaskStatus.done
+     }).reduce((acc: Record<number, Task>, _key: string) => {
       const key = parseInt(_key);
       const { pomodoros } = tasks[key];
-      Object.assign(acc[key], { ...tasks[key], pomodoros: { ...pomodoros, act: 0 } });
+      Object.assign(acc, {[key]: { ...tasks[key], pomodoros: { ...pomodoros, act: 0 } }});
       return acc;
     }, {});
 
@@ -30,4 +33,24 @@ const clearAllActPomo = createAsyncThunk('pomodoro/clearAllActPomo', async (_, {
   }
 });
 
-export { clearAllFinished, clearAllActPomo };
+const increaseActPomo = createAsyncThunk('pomodoro/increaseActPomo', async (_, { getState, dispatch }) => {
+  try {
+    const { tasks } = (getState() as RootState).pomodoro;
+    const finishedTasks = Object.keys(tasks).filter((_key:string)=>{  const key = parseInt(_key);
+      const _task =tasks[key];
+      return _task.status !== TaskStatus.done
+     }).reduce((acc: Record<number, Task>, _key: string) => {
+      const key = parseInt(_key);
+      const { pomodoros } = tasks[key];
+      Object.assign(acc, {[key]: { ...tasks[key], pomodoros: { ...pomodoros, act: pomodoros.act+1 } }});
+      return acc;
+    }, {});
+
+    dispatch(setTasks(finishedTasks));
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+
+export { clearAllFinished, clearAllActPomo,increaseActPomo };

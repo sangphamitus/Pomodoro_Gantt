@@ -27,7 +27,7 @@ const SettingsModal = () => {
   return (
     <div>
       <dialog id="settings_modal" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+        <div className="modal-box  overflow-x-hidden ">
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -107,7 +107,7 @@ const SettingsModal = () => {
               <div className="divider m-1"></div>
 
               {/* if there is a button in form, it will close the modal */}
-              <div>
+              <div className="pb-2">
                 <button className="mt-2 btn-sm float-right btn-primary rounded-md">OK</button>
               </div>
             </form>
