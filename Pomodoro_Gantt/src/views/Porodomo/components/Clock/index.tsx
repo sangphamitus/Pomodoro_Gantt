@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../configs/hooks';
-import { setIsRunning } from '../../../../redux/pomodoro/pomodoroSlice';
+import { setCurrentInterval, setIsRunning, setMode } from '../../../../redux/pomodoro/pomodoroSlice';
+import { PomodoroMode } from '../../../../common/enum';
 
 const Clock = ({ className }: { className: string }) => {
   const dispatch = useAppDispatch();
-  const { mode, settings, isRunning } = useAppSelector((state) => state.pomodoro);
-  const { timer } = settings;
+  const { mode, settings, isRunning, currentInterval } = useAppSelector((state) => state.pomodoro);
+  const { autoStartBreak, autoStartPomodoro, longBreakInterval, timer } = settings;
   const [second, setSecond] = useState<number>(0);
+  const interval = useRef<any>();
 
   const onClickHandler = () => {
     dispatch(setIsRunning(!isRunning));
@@ -19,19 +21,43 @@ const Clock = ({ className }: { className: string }) => {
   useEffect(() => {
     setSecond(timer[mode] * 60);
     if (isRunning) dispatch(setIsRunning(false));
-  }, [mode]);
+    if (autoStartPomodoro && mode === PomodoroMode.pomodoro && currentInterval != 0) {
+      dispatch(setIsRunning(true));
+    }
+    if (autoStartBreak && (mode === PomodoroMode.shortBreak || mode === PomodoroMode.longBreak)) {
+      dispatch(setIsRunning(true));
+    }
+  }, [mode, timer]);
 
   useEffect(() => {
     if (!isRunning) return;
-    const interval = setInterval(() => {
+
+    interval.current = setInterval(() => {
       if (second > 0) {
         setSecond((second) => {
-          document.title = `${formatTime(second - 1)} PomoAntt`;
-          return second - 1;
+          document.title = `${formatTime(second - 30)} PomoAntt`;
+          return second - 30;
         });
+      } else {
+        dispatch(setIsRunning(false));
+
+        if (autoStartBreak && mode === PomodoroMode.pomodoro) {
+          if (currentInterval === longBreakInterval) {
+            dispatch(setCurrentInterval(0));
+            dispatch(setMode(PomodoroMode.longBreak));
+          } else {
+            dispatch(setMode(PomodoroMode.shortBreak));
+            dispatch(setCurrentInterval(currentInterval + 1));
+          }
+        }
+        if (autoStartPomodoro && (mode === PomodoroMode.shortBreak || mode === PomodoroMode.longBreak)) {
+          dispatch(setMode(PomodoroMode.pomodoro));
+        }
+        clearInterval(interval.current);
       }
     }, 1000);
-    return () => clearInterval(interval);
+
+    return () => clearInterval(interval.current);
   }, [isRunning, mode]);
 
   return (

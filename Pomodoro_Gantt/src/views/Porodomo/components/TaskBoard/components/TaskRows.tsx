@@ -39,7 +39,7 @@ const TaskRows = memo(({ id }: { id: number }) => {
         </div>
         <div className="flex gap-3 text-center align-middle">
           <div className="text-base-content text-center">
-            {task.poromodos.act}/{task.poromodos.est}
+            {task.pomodoros.act}/{task.pomodoros.est}
           </div>
           <button
             className="btn btn-square btn-outline btn-sm"

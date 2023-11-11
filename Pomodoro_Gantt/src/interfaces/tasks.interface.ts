@@ -3,7 +3,7 @@ import { TaskStatus } from '../common/enum';
 interface Task {
   id: number;
   name: string;
-  poromodos: {
+  pomodoros: {
     act: number;
     est: number;
   };
