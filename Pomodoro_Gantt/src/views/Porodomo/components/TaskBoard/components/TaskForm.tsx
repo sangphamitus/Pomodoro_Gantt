@@ -15,7 +15,7 @@ const TaskForm = ({ callbacks, id = undefined }: { callbacks: () => void; id?: n
         status: TaskStatus.notDone,
         name: '',
         note: '',
-        poromodos: {
+        pomodoros: {
           act: 0,
           est: 1,
         },
@@ -47,12 +47,25 @@ const TaskForm = ({ callbacks, id = undefined }: { callbacks: () => void; id?: n
           />
         </fieldset>
         <fieldset className="w-full flex flex-col gap-1">
-          <label>Est Pomodoros</label>
+          {id ? <label>Act/Est Pomodoros</label> : <label>Est Pomodoros</label>}
           <div className="flex justify-around ">
+            {id ? (
+              <>
+                <input
+                  type="number"
+                  {...register('pomodoros.act', { required: true })}
+                  aria-invalid={errors.pomodoros?.est ? 'true' : 'false'}
+                  className="input input-ghost input-xs rounded-sm input-sm"
+                />
+                <div className="mx-2">/</div>
+              </>
+            ) : (
+              <></>
+            )}
             <input
               type="number"
-              {...register('poromodos.est', { required: true })}
-              aria-invalid={errors.poromodos?.est ? 'true' : 'false'}
+              {...register('pomodoros.est', { required: true })}
+              aria-invalid={errors.pomodoros?.est ? 'true' : 'false'}
               className="input input-ghost input-xs rounded-sm input-sm"
             />
             <div className="flex gap-2">
@@ -60,7 +73,7 @@ const TaskForm = ({ callbacks, id = undefined }: { callbacks: () => void; id?: n
               <button
                 type="button"
                 onClick={() => {
-                  setValue('poromodos.est', parseInt(getValues('poromodos.est').toString()) + 1);
+                  setValue('pomodoros.est', parseInt(getValues('pomodoros.est').toString()) + 1);
                 }}
                 className="btn btn-sm btn-secondary"
               >
@@ -69,8 +82,8 @@ const TaskForm = ({ callbacks, id = undefined }: { callbacks: () => void; id?: n
               <button
                 type="button"
                 onClick={() => {
-                  if (getValues('poromodos.est') > 0)
-                    setValue('poromodos.est', parseInt(getValues('poromodos.est').toString()) - 1);
+                  if (getValues('pomodoros.est') > 0)
+                    setValue('pomodoros.est', parseInt(getValues('pomodoros.est').toString()) - 1);
                 }}
                 className="btn btn-sm btn-secondary"
               >
@@ -102,7 +115,7 @@ const TaskForm = ({ callbacks, id = undefined }: { callbacks: () => void; id?: n
             Cancel
           </button>
           <button type="submit" className="btn-primary btn-active btn btn-sm">
-            Add
+            {id ? 'Save' : 'Add'}
           </button>
         </div>
       </form>

@@ -25,6 +25,7 @@ const Porodomo = () => {
     []
   );
   const classes = tabs[mode].className;
+
   return (
     <div className="flex justify-center">
       <div className={`rounded-lg p-5`} style={{ boxShadow: `0px 0px 30px ${settings.colors[mode]}` }}>
@@ -33,7 +34,10 @@ const Porodomo = () => {
             <a
               key={_tab}
               className={`tab ${_tab === mode ? 'tab-active' : ''}`}
-              onClick={() => dispatch(setMode(_tab as PomodoroMode))}
+              onClick={() => {
+                document.title = `PomoAntt`;
+                dispatch(setMode(_tab as PomodoroMode));
+              }}
             >
               {tabs[_tab].title}
             </a>

@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
+import Logo from '../../assets/tomato.svg';
 import { AppTab } from '../../common/enum';
 import { useAppDispatch, useAppSelector } from '../../configs/hooks';
 import { setTabs } from '../../redux/general/generalSlice';
 import Gantt from '../Gantt';
 import Porodomo from '../Porodomo';
-import Logo from '../../assets/tomato.svg';
 
 interface OptionComponent {
   label: string;
@@ -32,7 +32,7 @@ const Main = () => {
       <div className="flex justify-between align-middle">
         <div className="flex align-middle ">
           <img src={Logo} className="h-[40px] " />
-          <span className="py-1">ToMaTo Gantt</span>{' '}
+          <span className="py-1">PomoAntt</span>{' '}
         </div>
         <div className="tabs tabs-boxed">
           {Object.keys(options).map((_key: string) => {
@@ -41,7 +41,10 @@ const Main = () => {
               <a
                 key={_key}
                 className={`tab ${_key === tabs ? 'tab-active' : ''}`}
-                onClick={() => dispatch(setTabs(_key as AppTab))}
+                onClick={() => {
+                  document.title = `PomoAntt`;
+                  dispatch(setTabs(_key as AppTab));
+                }}
               >
                 {label}
               </a>
