@@ -17,7 +17,7 @@ const Main = () => {
     return Object.assign(
       {},
       {
-        [AppTab.porodomo]: { label: 'Porodomo', component: <Porodomo /> },
+        [AppTab.porodomo]: { label: 'Pomodoro', component: <Porodomo /> },
         [AppTab.gantt]: { label: 'Gantt', component: <Gantt /> },
       }
     );

@@ -1,1 +1,2 @@
-export * from './tasks.interface';
+export * from './task.interface';
+export * from "./item.interface";

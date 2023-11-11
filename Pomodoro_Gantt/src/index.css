@@ -6,3 +6,7 @@
   margin: 0;
   padding: 0;
 }
+#gantt{
+
+background-image:  repeating-linear-gradient(to right, hsl(var(--nc)), hsl(var(--nc)) 1px, hsl(var(--n)) 1px, hsl(var(--n)));
+}

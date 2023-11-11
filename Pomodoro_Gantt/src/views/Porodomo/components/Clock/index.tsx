@@ -9,7 +9,7 @@ const Clock = ({ className }: { className: string }) => {
   const { mode, settings, isRunning, currentInterval } = useAppSelector((state) => state.pomodoro);
   const { autoStartBreak, autoStartPomodoro, longBreakInterval, timer } = settings;
   const [second, setSecond] = useState<number>(0);
-  const interval = useRef<any>();
+  const interval = useRef<ReturnType<typeof setInterval>>();
 
   const onClickHandler = () => {
     dispatch(setIsRunning(!isRunning));

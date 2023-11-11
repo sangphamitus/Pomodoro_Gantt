@@ -1,8 +1,11 @@
+import RightPanel from './components/RightPanel';
 
 const Gantt = () => {
   return (
-    <div>Gantt</div>
-  )
-}
+    <div className="flex ">
+      <RightPanel />
+    </div>
+  );
+};
 
-export default Gantt
+export default Gantt;
